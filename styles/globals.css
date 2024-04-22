@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .menu-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden; /* Hidden by default, will be shown when menu is open */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .menu-overlay.active {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Additional styles for media cards */
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .media-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+
+  .media-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out; /* Smooth transform effect */
+  }
+
+  .media-item:hover img {
+    transform: scale(1.05); /* Slight zoom on hover */
+  }
+
+  .media-item h4 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.75); /* Dark overlay for text visibility */
+    color: white;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+
+@keyframes colorCycle {
+  0% { box-shadow: 0 0 25px #6500b8; }
+  25% { box-shadow: 0 0 25px #0088ff; }
+  50% { box-shadow: 0 0 25px #00ff88; }
+  75% { box-shadow: 0 0 25px #ff8800; }
+  100% { box-shadow: 0 0 25px #6500b8; }
+}
+
+.video-container {
+  position: relative;
+  width: 90%;
+  padding-top: 44%; /* Maintain aspect ratio for 16:9 */
+  margin: 20px auto;
+  box-shadow: 0 0 25px #6500b8;
+  z-index: 1;
+  animation: colorCycle 90s infinite linear;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.cast-card {
+  width: 120px; /* Fixed width for each card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cast-image {
+  width: 80px;
+  height: 100px;
+}
+
+.cast-name {
+  font-size: 0.875rem; /* 14px */
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* Ensures text does not expand beyond the image width */
+}
+
+.cast-character {
+  font-size: 0.75rem; /* 12px */
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allows wrapping */
+  max-height: 3rem; /* Limits the text block height, adjust as needed */
+}
