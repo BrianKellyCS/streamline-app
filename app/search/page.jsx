@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback} from 'react';
+import { Suspense, useState, useEffect, useCallback} from 'react';
 import { useSearchParams } from 'next/navigation';
 import MediaGrid from '@/components/MediaGrid';
 import { fetchSearchResults } from '../api';
@@ -33,10 +33,12 @@ const searchResults = () => {
 
 
   return (
+    <Suspense fallback={<p>Loading...</p>}>
     <section className="pt-20">
         {loading ? <p>Loading...</p> : <MediaGrid items={items} />}
 
     </section>
+    </Suspense>
   );
 };
 

@@ -1,6 +1,6 @@
 // pages/watch-now.js
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const WatchNow = () => {
@@ -33,6 +33,7 @@ const WatchNow = () => {
     const year = release_date ? `(${new Date(release_date).getFullYear()})` : '';
 
     return (
+      <Suspense fallback={<p>Loading..</p>}>
       <div className="mt-5 bg-black text-white min-h-screen">
         <div className="relative pt-16 pb-6 flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original${details.backdrop_path}')` }}>
           {/* Opacity Layer */}
@@ -58,6 +59,7 @@ const WatchNow = () => {
           ))}
         </div>
       </div>
+      </Suspense>
     );
   }
   
