@@ -66,7 +66,7 @@ const MediaDetails = ({ item, onClose }) => {
     const backdropURL = `https://image.tmdb.org/t/p/original${backdrop_path}`;
 
     return (
-        <div className="fixed inset-0 flex justify-center items-center p-4" onClick={handleOverlayClick}
+        <div className="mt-10 fixed inset-0 flex justify-center items-center p-4" onClick={handleOverlayClick}
              style={{
                  backgroundImage: `url('${backdropURL}')`,
                  backgroundSize: 'cover',
