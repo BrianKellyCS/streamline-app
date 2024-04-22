@@ -1,24 +1,34 @@
 'use client';
-import { Suspense, useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import MediaGrid from '@/components/MediaGrid';
 import { fetchSearchResults } from '../api';
 
-const searchResults = () => {
+function SearchFallback() {
+    return <div>Loading search results...</div>;
+}
+
+const SearchResults = () => {
+    return (
+        <Suspense fallback={<SearchFallback />}>
+            <SearchContent />
+        </Suspense>
+    );
+};
+
+const SearchContent = () => {
     const searchParams = useSearchParams();
     const search = searchParams.get('query');
     console.log(search);
     const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(false);
-    
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         if (!search) return; // Ensure there's a query to search for
 
         const fetchData = async () => {
-            setLoading(true);
             try {
-                let data;
-                data = await fetchSearchResults(search);
+                const data = await fetchSearchResults(search);
                 setItems(data.results);
             } catch (error) {
                 console.error('Failed to fetch search media:', error);
@@ -30,16 +40,11 @@ const searchResults = () => {
         fetchData();
     }, [search]);
 
-
-
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-    <section className="pt-20">
-        {loading ? <p>Loading...</p> : <MediaGrid items={items} />}
-
-    </section>
-    </Suspense>
-  );
+    return (
+        <section className="pt-20">
+            {loading ? <p>Loading...</p> : <MediaGrid items={items} />}
+        </section>
+    );
 };
 
-export default searchResults;
+export default SearchResults;
