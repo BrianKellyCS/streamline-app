@@ -12,13 +12,12 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   let data;
-  console.log('at home')
+
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        console.log('its trying')
         data = await fetchTrendingMedia(mediaType, currentPage);
 
         setItems(currentPage === 1 ? data.results : [...items, ...data.results]);
@@ -71,7 +70,6 @@ const Home = () => {
     };
   }, [handleScroll]);
 
-  console.log('data:', data);
 
   return (
     <section className="pt-20">

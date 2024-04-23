@@ -63,13 +63,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       if (e.key === 'Escape') {
         toggleSidebar();
       }
+      else if (e.key === 'Enter') {
+        handleSearch();
+      }
     };
 
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, toggleSidebar]);
+  }, [isOpen, toggleSidebar, searchQuery]);
 
   return (
     <div className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black bg-opacity-80 z-50`}>

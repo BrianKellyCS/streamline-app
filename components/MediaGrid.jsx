@@ -4,7 +4,6 @@ import MediaDetails from './MediaDetails'; // Import the modal component
 const MediaGrid = ({ items }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log('should be loading items: ', items);
   const openModal = (item) => {
     setSelectedItem(item);
     setModalOpen(true);

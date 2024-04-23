@@ -99,19 +99,19 @@ const MediaDetails = ({ item, onClose }) => {
                     </div>
                 </div>
                 <div className="mt-4">
-    <h2 className="text-xl">Cast</h2>
-    <div className="flex overflow-x-auto space-x-4 p-2">
-        {castList.map(actor => (
-            <div key={actor.cast_id} className="cast-card">
-                <img src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} className="rounded-full cast-image" />
-                <div className="text-center">
-                    <p className="cast-name">{actor.name}</p>
-                    <p className="cast-character">{actor.character}</p>
-                </div>
+            <h2 className="text-xl">Cast</h2>
+            <div className="flex overflow-x-auto space-x-4 p-2">
+                {castList.map(actor => (
+                    <div key={actor.cast_id} className="cast-card ">
+                        <img src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} className="w-20 h-full object-cover rounded-full" />
+                        <div className="text-center">
+                            <p className="cast-name">{actor.name}</p>
+                            <p className="cast-character">{actor.character}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
-        ))}
-    </div>
-</div>
+        </div>
                 <button onClick={onClose} className="absolute top-3 right-3 text-lg font-bold text-white hover:bg-primary-orange">✕</button>
             </div>
         </div>
