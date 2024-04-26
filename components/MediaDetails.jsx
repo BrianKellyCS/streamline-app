@@ -50,7 +50,7 @@ const MediaDetails = ({ item, onClose }) => {
                         <a href={firefoxLink} className="text-primary-orange hover:text-orange-600 mb-4 block" target="_blank" rel="noopener noreferrer">Install uBlock Origin for Firefox</a>
                     )}
                     <div className="flex justify-evenly mt-4">
-                        <button className="bg-primary-orange text-white hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(item.media_type, item.id)}>
+                        <button className="bg-primary-orange text-black hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(item.media_type, item.id)}>
                             Continue to Watch
                         </button>
                         <button className="bg-gray-800 text-white hover:bg-gray-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowModal(false)}>
