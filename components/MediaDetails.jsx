@@ -124,16 +124,7 @@ const handleWatchNow = (mediaType, id) => {
         };
     }, [onClose]);
 
-    useEffect(() => {
-        console.log('Checking cookie...');
-        const showModalCookie = Cookie.get('showModal');
-        console.log(`Cookie value: ${showModalCookie}`);
-        if (showModalCookie === 'false') {
-            setShowModal(false);
-        } else {
-            setShowModal(true);
-        }
-    }, []);
+
 
     const handleOverlayClick = (event) => {
         if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
