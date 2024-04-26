@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { fetchMediaDetails } from '../app/api';
 import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie';
 
 const MediaDetails = ({ item, onClose }) => {
     const [details, setDetails] = useState(null);
@@ -9,18 +10,36 @@ const MediaDetails = ({ item, onClose }) => {
     const modalContentRef = useRef(null);
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
-    
-    // Use this function to display the modal instead of navigating directly
-    const handleWatchNow = (mediaType, id) => {
-        setShowModal(true);
+    const [doNotShowAgain, setDoNotShowAgain] = useState(false);
+    console.log("THIS FUCK: ",doNotShowAgain);
+
+    const handleDoNotShowAgainChange = () => {
+        setDoNotShowAgain(!doNotShowAgain);
     };
+    
+const handleWatchNow = (mediaType, id) => {
+    const showModalCookie = Cookie.get('showModal');
+    if (showModalCookie !== 'false') {
+        setShowModal(true);
+    }
+        else{
+            watchNow(mediaType, id);
+        }
+
+};
 
     // Use this function to navigate after modal confirmation
     const confirmWatchNow = (mediaType, id) => {
-        setShowModal(false); // Close the modal on confirmation
-        onClose(); // Close any other open modal or cleanup
+        if (doNotShowAgain) {
+            Cookie.set('showModal', 'false', { expires: 365, path: '/' });
+            console.log('Cookie set to not show modal again.');
+        }
+        setShowModal(false);
+        console.log('Modal closed via confirmWatchNow.');
+        onClose();
         router.push(`/watch-now?media=${mediaType}&id=${id}`);
     };
+    
 
     const getBrowser = () => {
         // Simple browser detection
@@ -41,7 +60,7 @@ const MediaDetails = ({ item, onClose }) => {
         return (
             <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4">
                 <div className="bg-black text-white p-6 rounded-lg border border-gray-700">
-                    <p className="mb-4 text-bold">Please note before continuing: </p>
+                    <p className="mb-4 text-bold">Please note before continuing:</p>
                     <p className="mb-4">The video player contains popup ads. For an optimal viewing experience, we recommend using an ad blocker.</p>
                     {browser === 'chrome' && (
                         <a href={chromeLink} className="text-primary-orange hover:text-orange-600 mb-4 block" target="_blank" rel="noopener noreferrer">Install uBlock Origin for Chrome</a>
@@ -49,6 +68,10 @@ const MediaDetails = ({ item, onClose }) => {
                     {browser === 'firefox' && (
                         <a href={firefoxLink} className="text-primary-orange hover:text-orange-600 mb-4 block" target="_blank" rel="noopener noreferrer">Install uBlock Origin for Firefox</a>
                     )}
+                    <div className="flex items-center mb-4">
+                        <input type="checkbox" checked={doNotShowAgain} onChange={handleDoNotShowAgainChange} />
+                        <span className="ml-2">Do not show this again</span>
+                    </div>
                     <div className="flex justify-evenly mt-4">
                         <button className="bg-primary-orange text-black hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(item.media_type, item.id)}>
                             Continue to Watch
@@ -101,6 +124,17 @@ const MediaDetails = ({ item, onClose }) => {
         };
     }, [onClose]);
 
+    useEffect(() => {
+        console.log('Checking cookie...');
+        const showModalCookie = Cookie.get('showModal');
+        console.log(`Cookie value: ${showModalCookie}`);
+        if (showModalCookie === 'false') {
+            setShowModal(false);
+        } else {
+            setShowModal(true);
+        }
+    }, []);
+
     const handleOverlayClick = (event) => {
         if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
             onClose();  // Close modal if the click is outside the modal content
@@ -115,6 +149,8 @@ const MediaDetails = ({ item, onClose }) => {
     const year = release_date ? `(${new Date(release_date).getFullYear()})` : '';
     const castList = credits?.cast.slice(0, 10);
     const backdropURL = `https://image.tmdb.org/t/p/original${backdrop_path}`;
+
+    
 
     return (
         <div className="mt-10 fixed inset-0 flex justify-center items-center p-4" onClick={handleOverlayClick}
@@ -133,7 +169,6 @@ const MediaDetails = ({ item, onClose }) => {
                         <button className="absolute inset-0 m-auto w-12 h-12 text-white text-3xl font-bold flex items-center justify-center bg-primary-orange bg-opacity-75 rounded-full hover:bg-opacity-100 hover:w-16 hover:h-16 transition-all duration-300"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    console.log("USE A ADDBLOCKER")
                                     handleWatchNow(item.media_type, item.id);
                                 }}>
                             <span style={{ transform: 'translateX(15%) translateY(-5%)'  }}>▶</span>
