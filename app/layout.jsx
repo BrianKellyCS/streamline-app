@@ -1,5 +1,6 @@
 import '@styles/globals.css';
 import Navbar from '@components/Navbar';
+import { Analytics } from "@vercel/analytics/react"
 export const metadata = {
     title: "Streamline",
     description: 'Stream Movies & TV'
@@ -16,6 +17,7 @@ const RootLayout = ({children}) => {
         <main className="app bg-black text-white min-h-screen">
             <Navbar />
             {children}
+            <Analytics />
         </main>
         </body>
     </html>
