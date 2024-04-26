@@ -8,8 +8,59 @@ const MediaDetails = ({ item, onClose }) => {
     const [error, setError] = useState(null);
     const modalContentRef = useRef(null);
     const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
     
+    // Use this function to display the modal instead of navigating directly
+    const handleWatchNow = (mediaType, id) => {
+        setShowModal(true);
+    };
 
+    // Use this function to navigate after modal confirmation
+    const confirmWatchNow = (mediaType, id) => {
+        setShowModal(false); // Close the modal on confirmation
+        onClose(); // Close any other open modal or cleanup
+        router.push(`/watch-now?media=${mediaType}&id=${id}`);
+    };
+
+    const getBrowser = () => {
+        // Simple browser detection
+        if (/Chrome/.test(navigator.userAgent)) {
+            return 'chrome';
+        } else if (/Firefox/.test(navigator.userAgent)) {
+            return 'firefox';
+        } else {
+            return 'other';
+        }
+    };
+
+    const adBlockerModal = () => {
+        const browser = getBrowser();
+        const chromeLink = 'https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm';
+        const firefoxLink = 'https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/';
+    
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4">
+                <div className="bg-black text-white p-6 rounded-lg border border-gray-700">
+                    <p className="mb-4 text-bold">Please note before continuing: </p>
+                    <p className="mb-4">The video player contains popup ads. For an optimal viewing experience, we recommend using an ad blocker.</p>
+                    {browser === 'chrome' && (
+                        <a href={chromeLink} className="text-primary-orange hover:text-orange-600 mb-4 block" target="_blank" rel="noopener noreferrer">Install uBlock Origin for Chrome</a>
+                    )}
+                    {browser === 'firefox' && (
+                        <a href={firefoxLink} className="text-primary-orange hover:text-orange-600 mb-4 block" target="_blank" rel="noopener noreferrer">Install uBlock Origin for Firefox</a>
+                    )}
+                    <div className="flex justify-evenly mt-4">
+                        <button className="bg-primary-orange text-white hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(item.media_type, item.id)}>
+                            Continue to Watch
+                        </button>
+                        <button className="bg-gray-800 text-white hover:bg-gray-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowModal(false)}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
     const watchNow = (mediaType, id) => {
         onClose();
         router.push(`/watch-now?media=${mediaType}&id=${id}`);
@@ -82,7 +133,8 @@ const MediaDetails = ({ item, onClose }) => {
                         <button className="absolute inset-0 m-auto w-12 h-12 text-white text-3xl font-bold flex items-center justify-center bg-primary-orange bg-opacity-75 rounded-full hover:bg-opacity-100 hover:w-16 hover:h-16 transition-all duration-300"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    watchNow(item.media_type, item.id);
+                                    console.log("USE A ADDBLOCKER")
+                                    handleWatchNow(item.media_type, item.id);
                                 }}>
                             <span style={{ transform: 'translateX(15%) translateY(-5%)'  }}>▶</span>
                         </button>
@@ -98,7 +150,8 @@ const MediaDetails = ({ item, onClose }) => {
                         )}
                     </div>
                 </div>
-                <div className="mt-4">
+                {showModal && adBlockerModal()}
+            <div className="mt-4">
             <h2 className="text-xl">Cast</h2>
             <div className="flex overflow-x-auto space-x-4 p-2">
                 {castList.map(actor => (
