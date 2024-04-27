@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MediaDetails from './MediaDetails'; // Import the modal component
 
-const MediaGrid = ({ items }) => {
+const MediaGrid = ({ items, mediaType = 'none' }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const openModal = (item) => {
@@ -23,7 +23,7 @@ const MediaGrid = ({ items }) => {
           </div>
         </button>
       ))}
-      {modalOpen && <MediaDetails item={selectedItem} onClose={closeModal} />}
+      {modalOpen && <MediaDetails item={selectedItem} onClose={closeModal} mediaType={mediaType} />}
     </div>
   );
 };

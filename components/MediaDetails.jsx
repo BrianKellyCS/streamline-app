@@ -3,7 +3,7 @@ import { fetchMediaDetails } from '../app/api';
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
 
-const MediaDetails = ({ item, onClose }) => {
+const MediaDetails = ({ item, onClose, mediaType }) => {
     const [details, setDetails] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -11,7 +11,10 @@ const MediaDetails = ({ item, onClose }) => {
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
     const [doNotShowAgain, setDoNotShowAgain] = useState(false);
-    console.log("THIS FUCK: ",doNotShowAgain);
+
+    if(mediaType == 'none'){
+        mediaType = item.media_type;
+    }
 
     const handleDoNotShowAgainChange = () => {
         setDoNotShowAgain(!doNotShowAgain);
@@ -73,7 +76,7 @@ const handleWatchNow = (mediaType, id) => {
                         <span className="ml-2">Do not show this again</span>
                     </div>
                     <div className="flex justify-evenly mt-4">
-                        <button className="bg-primary-orange text-black hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(item.media_type, item.id)}>
+                        <button className="bg-primary-orange text-black hover:bg-orange-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => confirmWatchNow(mediaType, item.id)}>
                             Continue to Watch
                         </button>
                         <button className="bg-gray-800 text-white hover:bg-gray-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowModal(false)}>
@@ -95,7 +98,7 @@ const handleWatchNow = (mediaType, id) => {
         const fetchDetails = async () => {
             setLoading(true);
             try {
-                const detailsData = await fetchMediaDetails(item.media_type, item.id);
+                const detailsData = await fetchMediaDetails(mediaType, item.id);
                 setDetails(detailsData);
             } catch (error) {
                 console.error('Error fetching media details:', error);
@@ -174,14 +177,14 @@ const handleWatchNow = (mediaType, id) => {
                         <button className="absolute inset-0 m-auto w-12 h-12 text-white text-3xl font-bold flex items-center justify-center bg-primary-orange bg-opacity-75 rounded-full hover:bg-opacity-100 hover:w-16 hover:h-16 transition-all duration-300"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleWatchNow(item.media_type, item.id);
+                                    handleWatchNow(mediaType, item.id);
                                 }}>
                             <span style={{ transform: 'translateX(15%) translateY(-5%)'  }}>▶</span>
                         </button>
                     </div>
                     <div className="flex-grow p-4">
                         <h2 className="text-2xl text-primary-orange font-bold">{title || name} {year}</h2>
-                        {item.media_type === 'movie' && (
+                        {mediaType === 'movie' && (
                             <>
                                 <p className="text-primary-orange p-2">{runtime} mins</p>
                                 <p className="text-orange-500 p-2"><span className="mr-2">⭐ {Math.round(vote_average * 10) / 10}</span>Rating</p>
