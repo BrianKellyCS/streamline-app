@@ -58,11 +58,12 @@ export const fetchGenreMedia = async (mediaType, genreId, page) => {
 
 
 export const fetchMediaDetails = async (mediaType, id) => {
-  const url = `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&append_to_response=credits,images,videos`
+  const url = `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&append_to_response=credits,images,videos,watch/providers`
   const response = await fetch(url);
   if (!response.ok) throw new Error('Failed to fetch data');
   return await response.json();
 }
+
 
 export const fetchSearchResults = async (query) => {
   const url = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${query}`

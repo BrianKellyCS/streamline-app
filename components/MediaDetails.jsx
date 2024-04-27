@@ -141,7 +141,21 @@ const handleWatchNow = (mediaType, id) => {
     const castList = credits?.cast.slice(0, 10);
     const backdropURL = `https://image.tmdb.org/t/p/original${backdrop_path}`;
 
-    
+    const renderStreamingProviders = (streamingData) => {
+        const providers = streamingData?.results?.US?.flatrate || [];  // Adjust country code as needed
+        return providers.length > 0 ? (
+            <div>
+                <h3 className="text-xl text-primary-orange"></h3>
+                <div className="flex flex-wrap">
+                    {providers.map(provider => (
+                        <div key={provider.provider_id} className="p-2">
+                            <img src={`https://image.tmdb.org/t/p/original${provider.logo_path}`} alt={provider.provider_name} className="w-15 h-15" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        ) : <p className="text-primary-orange"></p>; {/*in case i want to display an alternative msg */}
+    };
 
     return (
         <div className="mt-10 fixed inset-0 flex justify-center items-center p-4" onClick={handleOverlayClick}
@@ -167,13 +181,16 @@ const handleWatchNow = (mediaType, id) => {
                     </div>
                     <div className="flex-grow p-4">
                         <h2 className="text-2xl text-primary-orange font-bold">{title || name} {year}</h2>
-                        <p className="mt-4 text-gray-300 p-4">{overview}</p>
                         {item.media_type === 'movie' && (
                             <>
+                                <p className="text-primary-orange p-2">{runtime} mins</p>
                                 <p className="text-orange-500 p-2"><span className="mr-2">⭐ {Math.round(vote_average * 10) / 10}</span>Rating</p>
-                                <p className="text-primary-orange p-2">Runtime: {runtime} mins</p>
+
                             </>
                         )}
+                        <p className="mt-4 text-gray-300 p-4">{overview}</p>
+   
+                        {renderStreamingProviders(details['watch/providers'])}
                     </div>
                 </div>
                 {showModal && adBlockerModal()}
