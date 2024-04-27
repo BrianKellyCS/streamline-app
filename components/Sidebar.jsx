@@ -115,7 +115,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               </ul>
             )}
           </li>
-          <li><Link href="/top-picks" passHref><span onClick={toggleSidebar}>Top Picks</span></Link></li>
           <li><Link href="/recently-added" passHref><span onClick={toggleSidebar}>Recently Added</span></Link></li>
           <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
           <li><Link href="/continue-watching" passHref><span onClick={toggleSidebar}>Continue Watching</span></Link></li>

@@ -26,6 +26,21 @@ const WatchContent = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const videoUrl = `https://vidsrc.to/embed/${mediaType}/${id}`;
+
+    const SeasonsDisplay = ({ seasons }) => {
+      if (!seasons) return null;
+      return (
+        <div className="text-white mt-4 p-4 bg-opacity-80 bg-gray-800 rounded">
+          <h3 className="text-xl font-bold mb-2">Seasons</h3>
+          {seasons.map(season => (
+            <div key={season.id} className="mb-2">
+              <h4 className="text-lg">{season.name} ({season.episode_count} episodes)</h4>
+              <p>{season.overview || 'No overview available.'}</p>
+            </div>
+          ))}
+        </div>
+      );
+    };
   
     useEffect(() => {
       if (mediaType && id) {
@@ -58,6 +73,7 @@ const WatchContent = () => {
   
           <h1 className="text-3xl font-bold mt-4 z-10 text-primary-orange">{details.title || details.name} {year}</h1>
           <p className="px-4 text-left z-10">{details.overview}</p>
+          {mediaType === 'tv' && details.seasons && <SeasonsDisplay seasons={details.seasons} />}
         </div>
         <div className="flex overflow-x-auto gap-4 p-4">
           {details.credits?.cast.slice(0, 16).map(actor => (

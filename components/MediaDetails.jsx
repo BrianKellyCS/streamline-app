@@ -145,11 +145,11 @@ const handleWatchNow = (mediaType, id) => {
         const providers = streamingData?.results?.US?.flatrate || [];  // Adjust country code as needed
         return providers.length > 0 ? (
             <div>
-                <h3 className="text-xl text-primary-orange"></h3>
+                <h3 className="text-xl text-primary-orange">Streaming on:</h3>
                 <div className="flex flex-wrap">
                     {providers.map(provider => (
                         <div key={provider.provider_id} className="p-2">
-                            <img src={`https://image.tmdb.org/t/p/original${provider.logo_path}`} alt={provider.provider_name} className="w-15 h-15" />
+                            <img src={`https://image.tmdb.org/t/p/original${provider.logo_path}`} alt={provider.provider_name} className="w-20 h-full object-cover rounded-full" />
                         </div>
                     ))}
                 </div>
@@ -185,12 +185,13 @@ const handleWatchNow = (mediaType, id) => {
                             <>
                                 <p className="text-primary-orange p-2">{runtime} mins</p>
                                 <p className="text-orange-500 p-2"><span className="mr-2">⭐ {Math.round(vote_average * 10) / 10}</span>Rating</p>
-
+    
                             </>
                         )}
                         <p className="mt-4 text-gray-300 p-4">{overview}</p>
-   
-                        {renderStreamingProviders(details['watch/providers'])}
+                        <div className="mt-12"> {/* Increased margin top here */}
+                            {renderStreamingProviders(details['watch/providers'])}
+                        </div>
                     </div>
                 </div>
                 {showModal && adBlockerModal()}
@@ -212,6 +213,7 @@ const handleWatchNow = (mediaType, id) => {
             </div>
         </div>
     );
+    
 };
 
 export default MediaDetails;

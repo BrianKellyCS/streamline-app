@@ -58,12 +58,12 @@ export const fetchGenreMedia = async (mediaType, genreId, page) => {
 
 
 export const fetchMediaDetails = async (mediaType, id) => {
-  const url = `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&append_to_response=credits,images,videos,watch/providers`
+  const appendResponse = mediaType === 'tv' ? 'credits,images,videos,watch/providers,seasons' : 'credits,images,videos,watch/providers';
+  const url = `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&append_to_response=${appendResponse}`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('Failed to fetch data');
   return await response.json();
 }
-
 
 export const fetchSearchResults = async (query) => {
   const url = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${query}`
@@ -81,3 +81,12 @@ export const fetchSearchResults = async (query) => {
 
   return data;
   }
+
+
+export const fetchSeasonDetails = async (mediaType, id, seasonNumber) => {
+  if (mediaType !== 'tv') return; // Only fetch seasons for TV shows
+  const url = `${BASE_URL}/${mediaType}/${id}/season/${seasonNumber}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Failed to fetch season details');
+  return await response.json();
+};
