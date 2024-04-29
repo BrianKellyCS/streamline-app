@@ -35,7 +35,7 @@ const WatchContent = () => {
           {seasons.map(season => (
             <div key={season.id} className="mb-2">
               <h4 className="text-lg">{season.name} ({season.episode_count} episodes)</h4>
-              <p>{season.overview || 'No overview available.'}</p>
+            
             </div>
           ))}
         </div>
@@ -70,14 +70,18 @@ const WatchContent = () => {
           <div className="video-container z-10">
             <iframe src={videoUrl} frameBorder="0" allowFullScreen></iframe>
           </div>
-  
-          <h1 className="text-3xl font-bold mt-4 z-10 text-primary-orange">{details.title || details.name} {year}</h1>
-          <p className="px-4 text-left z-10">{details.overview}</p>
-          {mediaType === 'tv' && details.seasons && <SeasonsDisplay seasons={details.seasons} />}
+          <div className="flex flex-col md:flex-row relative">
+            <div className = "max-w-4xl text-center">
+              <h1 className="text-3xl font-bold mt-4 z-10 text-primary-orange">{details.title || details.name} {year}</h1>
+              <p className="px-4 text-left z-10">{details.overview}</p>
+            </div>
+          </div>
+
+
         </div>
         <div className="flex overflow-x-auto gap-4 p-4">
           {details.credits?.cast.slice(0, 16).map(actor => (
-            <div key={actor.cast_id} className="min-w-max">
+            <div key={actor.cast_id} className="flex flex-col items-center">
               <img src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} className="w-24 h-24 rounded-full object-cover" />
               <div className="text-center">
                 <p className="font-bold">{actor.name}</p>
