@@ -5,6 +5,7 @@ import { sql } from "@vercel/postgres";
 export async function GET(request) {
   try {
     const { rows } = await sql`SELECT * FROM Users`;
+    console.log(rows);
     return new Response(JSON.stringify(rows), {
       status: 200,
       headers: {
