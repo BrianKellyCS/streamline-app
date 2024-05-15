@@ -114,7 +114,7 @@ export const fetchTopRatedMedia = async (mediaType, page) => {
 export async function fetchUsers() {
   try {
     const timestamp = Date.now(); // Get the current timestamp
-    const response = await fetch(`/api/get-users?tid=${timestamp}`, { cache: 'no-store' });
+    const response = await fetch(`/api/get-users?tid=${timestamp}`, { next: {revalidate: 1 } });
     if (!response.ok) {
       throw new Error('Failed to fetch users');
     }
