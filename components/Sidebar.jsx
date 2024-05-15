@@ -1,7 +1,9 @@
+// Sidebar.jsx
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { fetchGenres, fetchSearchResults } from '../app/api';
+import { fetchGenres } from '../app/api';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [genres, setGenres] = useState([]);
@@ -9,7 +11,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [showGenresMenu, setShowGenresMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const router = useRouter(); // Use useRouter for navigation
+  const router = useRouter();
+  const { user } = useAuth();
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -36,7 +39,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     }
   }, [activeMediaType, showGenresMenu]);
 
-  const handleGenreClick = (genreId, genreName) => {
+  const handleGenreClick = (genreId) => {
     toggleSidebar();
     setShowGenresMenu(false);
     router.push(`/${activeMediaType}/${genreId}`);
@@ -45,10 +48,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const handleSearch = () => {
     toggleSidebar();
     if (searchQuery.trim()) {
-        router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
-
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
-};
+  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -62,8 +64,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         toggleSidebar();
-      }
-      else if (e.key === 'Enter') {
+      } else if (e.key === 'Enter') {
         handleSearch();
       }
     };
@@ -87,7 +88,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder={isFocused ? '' : 'search...'} 
+            placeholder={isFocused ? '' : 'search...'}
           />
           <button onClick={handleSearch} className="ml-2 p-1 rounded bg-gray-800 text-primary-orange">
             →
@@ -99,8 +100,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <button className="w-full text-left" onClick={() => handleFetchGenres('movie')}>Movies</button>
             {activeMediaType === 'movie' && showGenresMenu && (
               <ul className="pl-6 space-y-2 text-primary-orange list-inside list-disc">
-                {genres.map(genre => (
-                  <li key={genre.id}><button onClick={() => handleGenreClick(genre.id, genre.name)}>{genre.name}</button></li>
+                {genres.map((genre) => (
+                  <li key={genre.id}><button onClick={() => handleGenreClick(genre.id)}>{genre.name}</button></li>
                 ))}
               </ul>
             )}
@@ -109,17 +110,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <button className="w-full text-left" onClick={() => handleFetchGenres('tv')}>Shows</button>
             {activeMediaType === 'tv' && showGenresMenu && (
               <ul className="pl-6 space-y-2 text-primary-orange list-inside list-disc">
-                {genres.map(genre => (
-                  <li key={genre.id}><button onClick={() => handleGenreClick(genre.id, genre.name)}>{genre.name}</button></li>
+                {genres.map((genre) => (
+                  <li key={genre.id}><button onClick={() => handleGenreClick(genre.id)}>{genre.name}</button></li>
                 ))}
               </ul>
             )}
           </li>
           <li><Link href="/top-rated" passHref><span onClick={toggleSidebar}>Top Rated</span></Link></li>
-          <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
-          <li><Link href="/continue-watching" passHref><span onClick={toggleSidebar}>Continue Watching</span></Link></li>
-          <li><Link href="/account-settings" passHref><span onClick={toggleSidebar}>Account Settings</span></Link></li>
-          <li><Link href="/logout" passHref><span onClick={toggleSidebar}>Logout</span></Link></li>
+          {user && (
+            <>
+              <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
+              <li><Link href="/continue-watching" passHref><span onClick={toggleSidebar}>Continue Watching</span></Link></li>
+              <li><Link href="/account-settings" passHref><span onClick={toggleSidebar}>Account Settings</span></Link></li>
+              <li><Link href="/logout" passHref><span onClick={toggleSidebar}>Logout</span></Link></li>
+            </>
+          )}
         </ul>
       </aside>
     </div>
@@ -127,4 +132,3 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 export default Sidebar;
-

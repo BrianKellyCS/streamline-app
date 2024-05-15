@@ -1,6 +1,7 @@
 import '@styles/globals.css';
 import Navbar from '@components/Navbar';
 import { Analytics } from "@vercel/analytics/react"
+import { AuthProvider } from '../context/AuthContext';
 export const metadata = {
     title: "Streamline",
     description: 'Stream Movies & TV'
@@ -8,22 +9,23 @@ export const metadata = {
 
 import React from 'react'
 
-const RootLayout = ({children}) => {
+const RootLayout = ({ children }) => {
   return (
     <html lang="en">
-        <body>
-            <div className="main">
-            </div>
+      <body>
+        <div className="main"></div>
         <main className="app bg-black text-white min-h-screen">
+          <AuthProvider>
             <Navbar />
             {children}
-            <Analytics />
+          </AuthProvider>
+          <Analytics />
         </main>
-        </body>
+      </body>
     </html>
-  )
-}
+  );
+};
 
-export default RootLayout
+export default RootLayout;
 
 

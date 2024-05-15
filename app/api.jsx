@@ -109,3 +109,39 @@ export const fetchTopRatedMedia = async (mediaType, page) => {
 
   return data;
 };
+
+
+export async function fetchUsers() {
+  try {
+    const response = await fetch('/api/get-users');
+    if (!response.ok) {
+      throw new Error('Failed to fetch users');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return [];
+  }
+}
+
+
+export async function addUser(user) {
+  try {
+    const response = await fetch('/api/add-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add user');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding user:', error);
+    return null;
+  }
+}
