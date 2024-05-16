@@ -111,6 +111,24 @@ export const fetchTopRatedMedia = async (mediaType, page) => {
 };
 
 
+export const fetchWatchHistoryDetails = async (watchHistory) => {
+  const detailsPromises = watchHistory.map(async (item) => {
+    const url = `${BASE_URL}/${item.mediatype}/${item.mediaid}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch data for ${item.mediatype} ${item.mediaid}`);
+    const data = await response.json();
+    return {
+      ...data,
+      mediaType: item.mediatype,
+    };
+  });
+
+  return Promise.all(detailsPromises);
+};
+/////////////////////////////////
+////////////////////////////////
+////////////////////////////////
+
 export async function fetchUsers() {
   try {
     const timestamp = Date.now(); // Get the current timestamp

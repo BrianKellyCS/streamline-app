@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback} from 'react';
 import MediaGrid from '@/components/MediaGrid';
 import MediaToggle from '@/components/MediaToggle';
-import { fetchUsers, fetchTrendingMedia } from './api';
+import { fetchTrendingMedia } from './api';
 
 const Home = () => {
   const [mediaType, setMediaType] = useState('movie');
@@ -11,7 +11,6 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
-  // const [users, setUsers] = useState([]);
   let data;
 
 
@@ -24,8 +23,7 @@ const Home = () => {
         setItems(currentPage === 1 ? data.results : [...items, ...data.results]);
         setTotalPages(data.total_pages);
 
-        // const usersData = await fetchUsers(); // Fetch users data
-        // setUsers(usersData);
+
       } catch (error) {
         console.error('Failed to fetch media:', error);
       } finally {
