@@ -19,7 +19,6 @@ const ContinueWatching = () => {
           if (data.error) {
             throw new Error(data.error);
           }
-          console.log("fsdlkfjdsklfj", data);
           const details = await fetchWatchHistoryDetails(data);
           setWatchHistory(details);
         })
