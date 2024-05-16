@@ -73,6 +73,7 @@ const TopRated = () => {
 
   return (
     <section className="pt-20">
+      <h1 className="text-2xl font-bold mb-4 text-primary-orange">Top Rated</h1>
       <MediaToggle activeType={mediaType} onToggle={handleMediaTypeChange} />
       <MediaGrid items={items} mediaType={mediaType} />
       {currentPage < totalPages && (

@@ -13,6 +13,8 @@ const MediaGrid = ({ items, mediaType = 'none' }) => {
     setSelectedItem(null);
   };
 
+
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4">
       {items.map(item => (
@@ -23,7 +25,7 @@ const MediaGrid = ({ items, mediaType = 'none' }) => {
           </div>
         </button>
       ))}
-      {modalOpen && <MediaDetails item={selectedItem} onClose={closeModal} mediaType={mediaType} />}
+      {modalOpen && <MediaDetails item={selectedItem} onClose={closeModal} mediaType={selectedItem.mediaType || mediaType} />}
     </div>
   );
 };
