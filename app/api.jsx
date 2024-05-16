@@ -136,6 +136,10 @@ export async function addUser(user) {
       body: JSON.stringify(user),
     });
 
+    if (response.status === 409) {
+      throw new Error('Username is already taken.');
+    }
+
     if (!response.ok) {
       throw new Error('Failed to add user');
     }
@@ -143,6 +147,6 @@ export async function addUser(user) {
     return await response.json();
   } catch (error) {
     console.error('Error adding user:', error);
-    return null;
+    return { error: error.message };
   }
 }

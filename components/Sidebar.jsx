@@ -1,4 +1,3 @@
-// Sidebar.jsx
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -9,10 +8,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [genres, setGenres] = useState([]);
   const [activeMediaType, setActiveMediaType] = useState('');
   const [showGenresMenu, setShowGenresMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -45,12 +43,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     router.push(`/${activeMediaType}/${genreId}`);
   };
 
-  const handleSearch = () => {
-    toggleSidebar();
-    if (searchQuery.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
-    }
-  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -64,36 +56,19 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         toggleSidebar();
-      } else if (e.key === 'Enter') {
-        handleSearch();
-      }
+      } 
     };
 
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, toggleSidebar, searchQuery]);
+  }, [isOpen, toggleSidebar]);
 
   return (
     <div className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black bg-opacity-80 z-50`}>
       <aside className="w-80 h-full bg-black text-gray-400 p-5 space-y-4 text-lg overflow-y-auto" style={{ maxHeight: '100vh' }}>
         <button className="text-3xl mb-5 text-gray-400" onClick={toggleSidebar}>✕</button>
-        <div className="flex items-center mb-5">
-          <input
-            type="text"
-            className="flex-grow p-2 transition-colors duration-300 bg-black text-primary-orange focus:bg-place-black border border-gray-700 placeholder-hover-orange focus:outline-none"
-            style={{ fontFamily: 'monospace' }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            placeholder={isFocused ? '' : 'search...'}
-          />
-          <button onClick={handleSearch} className="ml-2 p-1 rounded bg-gray-800 text-primary-orange">
-            →
-          </button>
-        </div>
         <ul className="space-y-3">
           <li><Link href="/" passHref><span onClick={toggleSidebar}>Home</span></Link></li>
           <li>
@@ -122,7 +97,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
               <li><Link href="/continue-watching" passHref><span onClick={toggleSidebar}>Continue Watching</span></Link></li>
               <li><Link href="/account-settings" passHref><span onClick={toggleSidebar}>Account Settings</span></Link></li>
-              <li><Link href="/logout" passHref><span onClick={toggleSidebar}>Logout</span></Link></li>
+              <li><button onClick={logout} className="w-full text-left" passHref><span onClick={toggleSidebar}>Logout</span></button></li>
             </>
           )}
         </ul>

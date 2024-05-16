@@ -11,7 +11,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
   let data;
 
 
@@ -24,9 +24,8 @@ const Home = () => {
         setItems(currentPage === 1 ? data.results : [...items, ...data.results]);
         setTotalPages(data.total_pages);
 
-        const usersData = await fetchUsers(); // Fetch users data
-        setUsers(usersData);
-        console.log(users);
+        // const usersData = await fetchUsers(); // Fetch users data
+        // setUsers(usersData);
       } catch (error) {
         console.error('Failed to fetch media:', error);
       } finally {

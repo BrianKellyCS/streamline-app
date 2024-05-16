@@ -18,6 +18,11 @@ const SignUp = () => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  const validateUsername = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_]+$/; // Allow only alphanumeric characters and underscores
+    return usernameRegex.test(username);
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError('');
@@ -25,6 +30,11 @@ const SignUp = () => {
 
     if (!username) {
       setError('Username is required.');
+      return;
+    }
+
+    if (!validateUsername(username)) {
+      setError('Username can only contain letters, numbers, and underscores.');
       return;
     }
 
@@ -57,12 +67,14 @@ const SignUp = () => {
 
       const addedUser = await addUser(newUser);
 
-      if (addedUser) {
-        setSuccess('User registered successfully!');
-        router.push('/');
-      } else {
-        setError('Failed to sign up. Please try again.');
+      if (addedUser.error) {
+        setError(addedUser.error);
+        setLoading(false);
+        return;
       }
+
+      setSuccess('User registered successfully!');
+      router.push('/login');
     } catch (err) {
       console.error('Error signing up:', err);
       setError('An error occurred. Please try again.');
@@ -73,7 +85,10 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-dark-bg">
-      <form onSubmit={handleSignUp} className="bg-black p-6 rounded shadow-md w-full max-w-md border border-dark-border">
+      <form
+        onSubmit={handleSignUp}
+        className="bg-black p-6 rounded shadow-md w-full max-w-md border border-dark-border"
+      >
         <h2 className="text-2xl mb-4 text-primary-orange">Sign Up</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {success && <p className="text-green-500 mb-4">{success}</p>}
@@ -85,6 +100,7 @@ const SignUp = () => {
             onChange={(e) => setUsername(e.target.value)}
             required
             className="w-full px-3 py-2 border rounded bg-dark-bg text-white border-dark-border"
+            autoComplete="username" // Ensure username autocomplete
           />
         </div>
         <div className="mb-4">
@@ -105,6 +121,7 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="w-full px-3 py-2 border rounded bg-dark-bg text-white border-dark-border"
+            autoComplete="new-password" // Ensure new password autocomplete
           />
         </div>
         <div className="mb-4">
@@ -115,6 +132,7 @@ const SignUp = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             className="w-full px-3 py-2 border rounded bg-dark-bg text-white border-dark-border"
+            autoComplete="new-password" // Ensure confirm password autocomplete
           />
         </div>
         <button

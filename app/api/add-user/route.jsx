@@ -20,6 +20,14 @@ export async function POST(request) {
       },
     });
   } catch (error) {
+    if (error.code === '23505') { // Unique violation error code for PostgreSQL
+      return new Response(JSON.stringify({ error: 'Username is already taken.' }), {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
