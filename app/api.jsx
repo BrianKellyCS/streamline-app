@@ -66,6 +66,19 @@ export const fetchMediaDetails = async (mediaType, id) => {
   return await response.json();
 }
 
+export const fetchMediaDetailsWithTrailer = async (mediaType, id) => {
+  const appendResponse = mediaType === 'tv' ? 'credits,images,videos,watch/providers,seasons' : 'credits,images,videos,watch/providers';
+  const url = `${BASE_URL}/${mediaType}/${id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}&append_to_response=${appendResponse}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Failed to fetch data');
+
+  const data = await response.json();
+  const trailers = data.videos.results.filter(video => video.type === 'Trailer' && video.site === 'YouTube');
+  const trailerUrl = trailers.length > 0 ? `https://www.youtube.com/embed/${trailers[0].key}` : '';
+
+  return { ...data, trailerUrl };
+};
+
 export const fetchSearchResults = async (query) => {
   const url = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${query}`
   const response = await fetch(url);

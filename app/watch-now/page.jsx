@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
+import { fetchMediaDetailsWithTrailer } from '../api';
 
 function WatchNowFallback() {
   return <div>Loading search results...</div>;
@@ -30,9 +31,10 @@ const WatchContent = () => {
 
   useEffect(() => {
     if (mediaType && id) {
-      fetch(`https://api.themoviedb.org/3/${mediaType}/${id}?api_key=2ac6c7454620266df100979cb35f5298&append_to_response=credits,images,videos`)
-        .then(response => response.json())
-        .then(setDetails)
+      fetchMediaDetailsWithTrailer(mediaType, id)
+        .then(data => {
+          setDetails(data);
+        })
         .catch(setError)
         .finally(() => setLoading(false));
     }
@@ -56,7 +58,7 @@ const WatchContent = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (!details) return <p>No details available.</p>;
 
-  const { title, name, credits, release_date, poster_path, overview, runtime, vote_average, backdrop_path } = details;
+  const { title, name, credits, release_date, poster_path, overview, runtime, vote_average, backdrop_path, trailerUrl } = details;
   const year = release_date ? `(${new Date(release_date).getFullYear()})` : '';
 
   return (
@@ -64,7 +66,15 @@ const WatchContent = () => {
       <div className="relative pt-16 pb-6 flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original${details.backdrop_path}')` }}>
         <div className="absolute inset-0 bg-black bg-opacity-80"></div>
         <div className="video-container z-10">
-          <iframe src={videoUrl} frameBorder="0" allowFullScreen></iframe>
+          {user ? (
+            <iframe src={videoUrl} frameBorder="0" allowFullScreen></iframe>
+          ) : (
+            trailerUrl ? (
+              <iframe src={trailerUrl} frameBorder="0" allowFullScreen></iframe>
+            ) : (
+              <p>No trailer available</p>
+            )
+          )}
         </div>
         <div className="flex flex-col md:flex-row relative">
           <div className="max-w-4xl text-center">

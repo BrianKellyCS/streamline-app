@@ -97,7 +97,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
               <li><Link href="/watch-history" passHref><span onClick={toggleSidebar}>Watch History</span></Link></li>
               <li><Link href="/account-settings" passHref><span onClick={toggleSidebar}>Account Settings</span></Link></li>
-              <li><button onClick={logout} className="w-full text-left" passHref><span onClick={toggleSidebar}>Logout</span></button></li>
+              <li><Link href="/" passHref><button onClick={logout} className="w-full text-left" passHref><span onClick={toggleSidebar}>Logout</span></button></Link></li>
             </>
           )}
         </ul>

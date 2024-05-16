@@ -130,9 +130,10 @@ const Navbar = () => {
               </button>
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-black border border-gray-700 text-white rounded shadow-lg">
-                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-gray-800">
+                    <Link href="/" passHref><button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-gray-800">
                       Logout
                     </button>
+                    </Link>
                   </div>
                 )}
               </div>
