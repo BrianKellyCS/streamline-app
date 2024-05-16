@@ -35,7 +35,7 @@ const ContinueWatching = () => {
 
   return (
     <section className="pt-20">
-      <h1 className="text-2xl font-bold mb-4 text-primary-orange">Continue Watching</h1>
+      <h1 className="text-2xl font-bold mb-4 text-primary-orange">Watch History</h1>
       <MediaGrid items={watchHistory} />
     </section>
   );

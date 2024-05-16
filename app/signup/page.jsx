@@ -1,8 +1,10 @@
+// signup/page.jsx
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import bcrypt from 'bcryptjs';
 import { addUser } from '../api'; // Adjust the path as necessary
+import { useAuth } from '../../context/AuthContext'; // Import the AuthContext
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -13,6 +15,7 @@ const SignUp = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  const { login } = useAuth(); // Destructure the login function from useAuth
 
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -74,7 +77,10 @@ const SignUp = () => {
       }
 
       setSuccess('User registered successfully!');
-      router.push('/login');
+      // Log the user in
+      login(addedUser);
+      // Redirect to homepage or dashboard
+      router.push('/');
     } catch (err) {
       console.error('Error signing up:', err);
       setError('An error occurred. Please try again.');

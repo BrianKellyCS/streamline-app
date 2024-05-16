@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import bcrypt from 'bcryptjs';
-import { fetchUsers } from '../api'; // Adjust the path as necessary
 import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
@@ -20,10 +19,23 @@ const Login = () => {
     setError('');
 
     try {
-      const users = await fetchUsers();
-      const user = users.find((u) => u.username === username);
+      const response = await fetch('/api/verify-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      });
 
-      if (user && bcrypt.compareSync(password, user.password)) {
+      const user = await response.json();
+
+      if (response.status !== 200) {
+        setError(user.error);
+        setLoading(false);
+        return;
+      }
+
+      if (bcrypt.compareSync(password, user.password)) {
         // Set the user in the AuthContext
         login(user);
         // Redirect to homepage or dashboard

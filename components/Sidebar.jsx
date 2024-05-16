@@ -95,7 +95,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           {user && (
             <>
               <li><Link href="/my-playlist" passHref><span onClick={toggleSidebar}>My Playlist</span></Link></li>
-              <li><Link href="/continue-watching" passHref><span onClick={toggleSidebar}>Continue Watching</span></Link></li>
+              <li><Link href="/watch-history" passHref><span onClick={toggleSidebar}>Watch History</span></Link></li>
               <li><Link href="/account-settings" passHref><span onClick={toggleSidebar}>Account Settings</span></Link></li>
               <li><button onClick={logout} className="w-full text-left" passHref><span onClick={toggleSidebar}>Logout</span></button></li>
             </>
