@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { fetchMediaDetails } from '../app/api';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 import Cookie from 'js-cookie';
 
 const MediaDetails = ({ item, onClose, mediaType }) => {
@@ -9,6 +10,7 @@ const MediaDetails = ({ item, onClose, mediaType }) => {
     const [error, setError] = useState(null);
     const modalContentRef = useRef(null);
     const router = useRouter();
+    const { user } = useAuth();
     const [showModal, setShowModal] = useState(false);
     const [doNotShowAgain, setDoNotShowAgain] = useState(false);
 
@@ -19,17 +21,15 @@ const MediaDetails = ({ item, onClose, mediaType }) => {
     const handleDoNotShowAgainChange = () => {
         setDoNotShowAgain(!doNotShowAgain);
     };
-    
-const handleWatchNow = (mediaType, id) => {
-    const showModalCookie = Cookie.get('showModal');
-    if (showModalCookie !== 'false') {
-        setShowModal(true);
-    }
-        else{
+
+    const handleWatchNow = (mediaType, id) => {
+        const showModalCookie = Cookie.get('showModal');
+        if (showModalCookie !== 'false') {
+            setShowModal(true);
+        } else {
             watchNow(mediaType, id);
         }
-
-};
+    };
 
     // Use this function to navigate after modal confirmation
     const confirmWatchNow = (mediaType, id) => {
@@ -42,7 +42,6 @@ const handleWatchNow = (mediaType, id) => {
         onClose();
         router.push(`/watch-now?media=${mediaType}&id=${id}`);
     };
-    
 
     const getBrowser = () => {
         // Simple browser detection
@@ -59,7 +58,7 @@ const handleWatchNow = (mediaType, id) => {
         const browser = getBrowser();
         const chromeLink = 'https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm';
         const firefoxLink = 'https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/';
-    
+
         return (
             <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4">
                 <div className="bg-black text-white p-6 rounded-lg border border-gray-700">
@@ -87,6 +86,7 @@ const handleWatchNow = (mediaType, id) => {
             </div>
         );
     };
+
     const watchNow = (mediaType, id) => {
         onClose();
         router.push(`/watch-now?media=${mediaType}&id=${id}`);
@@ -127,11 +127,31 @@ const handleWatchNow = (mediaType, id) => {
         };
     }, [onClose]);
 
-
-
     const handleOverlayClick = (event) => {
         if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
             onClose();  // Close modal if the click is outside the modal content
+        }
+    };
+
+    const handleAddToPlaylist = async () => {
+        try {
+            const response = await fetch('/api/add-to-playlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: user.username, mediaType, mediaID: item.id }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Added to playlist!');
+            } else {
+                alert(data.error || 'Failed to add to playlist.');
+            }
+        } catch (error) {
+            console.error('Error adding to playlist:', error);
+            alert('Failed to add to playlist.');
         }
     };
 
@@ -145,7 +165,7 @@ const handleWatchNow = (mediaType, id) => {
     const backdropURL = `https://image.tmdb.org/t/p/original${backdrop_path}`;
 
     const renderStreamingProviders = (streamingData) => {
-        const providers = streamingData?.results?.US?.flatrate || [];  // Adjust country code as needed
+        const providers = streamingData?.results?.US?.flatrate || [];
         return providers.length > 0 ? (
             <div>
                 <h3 className="text-xl text-primary-orange">Streaming on:</h3>
@@ -157,7 +177,7 @@ const handleWatchNow = (mediaType, id) => {
                     ))}
                 </div>
             </div>
-        ) : <p className="text-primary-orange"></p>; {/*in case i want to display an alternative msg */}
+        ) : <p className="text-primary-orange"></p>;
     };
 
     return (
@@ -188,35 +208,41 @@ const handleWatchNow = (mediaType, id) => {
                             <>
                                 <p className="text-primary-orange p-2">{runtime} mins</p>
                                 <p className="text-orange-500 p-2"><span className="mr-2">⭐ {Math.round(vote_average * 10) / 10}</span>Rating</p>
-    
                             </>
                         )}
                         <p className="mt-4 text-gray-300 p-4">{overview}</p>
-                        <div className="mt-12"> {/* Increased margin top here */}
+                        <div className="mt-12">
                             {renderStreamingProviders(details['watch/providers'])}
                         </div>
+                        {user && (
+                            <button
+                                className="bg-primary-orange text-black font-bold py-2 px-4 rounded mt-4 hover:bg-orange-500"
+                                onClick={handleAddToPlaylist}
+                            >
+                                Add to Playlist
+                            </button>
+                        )}
                     </div>
                 </div>
                 {showModal && adBlockerModal()}
-            <div className="mt-4">
-            <h2 className="text-xl">Cast</h2>
-            <div className="flex overflow-x-auto space-x-4 p-2">
-                {castList.map(actor => (
-                    <div key={actor.cast_id} className="cast-card ">
-                        <img src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} className="w-20 h-full object-cover rounded-full" />
-                        <div className="text-center">
-                            <p className="cast-name">{actor.name}</p>
-                            <p className="cast-character">{actor.character}</p>
-                        </div>
+                <div className="mt-4">
+                    <h2 className="text-xl">Cast</h2>
+                    <div className="flex overflow-x-auto space-x-4 p-2">
+                        {castList.map(actor => (
+                            <div key={actor.cast_id} className="cast-card">
+                                <img src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} className="w-20 h-full object-cover rounded-full" />
+                                <div className="text-center">
+                                    <p className="cast-name">{actor.name}</p>
+                                    <p className="cast-character">{actor.character}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-        </div>
+                </div>
                 <button onClick={onClose} className="absolute top-3 right-3 text-lg font-bold text-white hover:bg-primary-orange">✕</button>
             </div>
         </div>
     );
-    
 };
 
 export default MediaDetails;
