@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Streamline
+
+Streamline is a fully functioning streaming website built with Next.js, utilizing Vercel's serverless PostgreSQL database and hosted on Vercel. Uses the TMDB API to provide comprehensive details about movies and shows, including runtime, rating, and cast information. Users can create accounts, view their watch history, and add media to their playlists. Upcoming features will allow users to share media info with others, to make it easy to find something to watch with friends/family.
+
+## Features
+
+- **User Accounts**: Create and manage user accounts.
+- **Watch History**: Track the movies and shows you have watched.
+- **Playlists**: Add media to your personalized playlists.
+- **Media Details**: Get detailed information about movies and shows, including runtime, rating, and cast.
+- **Upcoming Features**: Share media with other users to recommend content.
 
 ## Getting Started
 
