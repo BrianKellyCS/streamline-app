@@ -2,15 +2,18 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 
 
 const checkVideoAvailability = async (mediaType, itemId) => {
-  const videoUrl = `https://vidsrc.net/embed/${mediaType}/${itemId}`;
-  try {
-    const response = await fetch(videoUrl);
-    //console.log(`Status for ${itemId}:`, response.status); // Log status
-    return response.status === 200;  // Check if the status is exactly 200 for available content
-  } catch (error) {
-    //console.error("Failed to check video availability:", error);
-    return false;
-  }
+  // const videoUrl = `https://vidsrc.to/embed/${mediaType}/${itemId}`;
+  // try {
+  //   const response = await fetch(videoUrl);
+  //   //console.log(`Status for ${itemId}:`, response.status); // Log status
+  //   return response.status === 200;  // Check if the status is exactly 200 for available content
+  // } catch (error) {
+  //   //console.error("Failed to check video availability:", error);
+  //   return false;
+  //}
+
+  //VID SRC IS DOWN, SO JUST RETURN TRUE
+  return true;
 };
 
 
@@ -20,7 +23,7 @@ export const fetchTrendingMedia = async (mediaType, page) => {
   if (!response.ok) throw new Error('Failed to fetch data');
   let data = await response.json();
 
-  // Check availability of each media item on vidsrc.net
+  // Check availability of each media item on vidsrc.to
   const availability = await Promise.all(data.results.map(item =>
       checkVideoAvailability(mediaType || item.media_type, item.id)
   ));
@@ -45,7 +48,7 @@ export const fetchGenreMedia = async (mediaType, genreId, page) => {
   if (!response.ok) throw new Error('Failed to fetch data');
   let data = await response.json();
 
-  // Check availability of each media item on vidsrc.net
+  // Check availability of each media item on vidsrc.to
   const availability = await Promise.all(data.results.map(item =>
       checkVideoAvailability(mediaType || item.media_type, item.id)
   ));
@@ -85,7 +88,7 @@ export const fetchSearchResults = async (query) => {
   if (!response.ok) throw new Error('Failed to fetch data');
   let data = await response.json();
   // console.log(data)
-  // Check availability of each media item on vidsrc.net
+  // Check availability of each media item on vidsrc.to
   const availability = await Promise.all(data.results.map(item =>
     checkVideoAvailability(item.media_type, item.id)
   ));
@@ -112,7 +115,7 @@ export const fetchTopRatedMedia = async (mediaType, page) => {
   if (!response.ok) throw new Error('Failed to fetch data');
   let data = await response.json();
 
-  // Check availability of each media item on vidsrc.net
+  // Check availability of each media item on vidsrc.to
   const availability = await Promise.all(data.results.map(item =>
       checkVideoAvailability(mediaType || item.media_type, item.id)
   ));
