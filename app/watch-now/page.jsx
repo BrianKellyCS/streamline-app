@@ -26,7 +26,7 @@ const WatchContent = () => {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const videoUrl = `https://vidsrc.to/embed/${mediaType}/${id}`;
+  const videoUrl = `https://vidsrc.xyz/embed/${mediaType}/${id}`;
   const [isWatchHistorySaved, setIsWatchHistorySaved] = useState(false); // Flag to track if the watch history has been saved
 
   useEffect(() => {
