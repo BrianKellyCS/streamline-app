@@ -2,18 +2,18 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 
 
 const checkVideoAvailability = async (mediaType, itemId) => {
-  const videoUrl = `https://vidsrc.xyz/embed/${mediaType}/${itemId}`;
-  try {
-    const response = await fetch(videoUrl);
-    //console.log(`Status for ${itemId}:`, response.status); // Log status
-    return response.status === 200;  // Check if the status is exactly 200 for available content
-  } catch (error) {
-    //console.error("Failed to check video availability:", error);
-    return false;
-  }
+  // const videoUrl = `https://vidsrc.xyz/embed/${mediaType}/${itemId}`;
+  // try {
+  //   const response = await fetch(videoUrl);
+  //   //console.log(`Status for ${itemId}:`, response.status); // Log status
+  //   return response.status === 200;  // Check if the status is exactly 200 for available content
+  // } catch (error) {
+  //   //console.error("Failed to check video availability:", error);
+  //   return false;
+  // }
 
   // //IF VID SRC IS DOWN, JUST RETURN TRUE
-  // return true;
+   return true;
 };
 
 
