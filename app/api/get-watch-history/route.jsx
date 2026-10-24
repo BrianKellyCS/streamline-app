@@ -1,47 +1,37 @@
-// pages/api/get-watch-history/route.jsx
 import { sql } from "@vercel/postgres";
-import { revalidatePath } from 'next/cache';
 
-// Force Next.js to render this route dynamically
-export const dynamic = 'force-dynamic';
-export const revalidate = 1;
+export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const username = searchParams.get('username');
+    const username = searchParams.get("username");
 
     if (!username) {
-      return new Response(JSON.stringify({ error: 'Username is required' }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return Response.json(
+        { error: "Username is required" },
+        { status: 400 }
+      );
     }
 
     const result = await sql`
-      SELECT * FROM WatchHistory WHERE username = ${username} ORDER BY watched_at DESC
+      SELECT *
+      FROM WatchHistory
+      WHERE username = ${username}
+      ORDER BY watched_at DESC
     `;
 
-    // To dynamically get the path
-    const path = request.nextUrl.searchParams.get("path") || "/";
-    revalidatePath(path);
-
-    return new Response(JSON.stringify(result.rows), {
-      status: 200,
+    return Response.json(result.rows, {
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store', // Ensure no caching on response
+        "Cache-Control": "no-store, max-age=0",
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store', // Ensure no caching on error response
-      },
-    });
+    console.error("Failed to fetch watch history:", error);
+
+    return Response.json(
+      { error: "Failed to fetch watch history" },
+      { status: 500 }
+    );
   }
 }
