@@ -12,22 +12,30 @@ const ContinueWatching = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      fetch(`/api/get-watch-history?username=${user.username}`)
-        .then((res) => res.json())
-        .then(async (data) => {
-          if (data.error) {
-            throw new Error(data.error);
-          }
-          const details = await fetchWatchHistoryDetails(data);
-          setWatchHistory(details);
-        })
-        .catch(err => {
-          setError(err.message);
-          console.error('Error fetching watch history:', err);
-        })
-        .finally(() => setLoading(false));
+    if (!user) {
+      setWatchHistory([]);
+      setError(null);
+      setLoading(false);
+      return;
     }
+
+    setLoading(true);
+    setError(null);
+
+    fetch(`/api/get-watch-history?username=${user.username}`)
+      .then((res) => res.json())
+      .then(async (data) => {
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        const details = await fetchWatchHistoryDetails(data);
+        setWatchHistory(details);
+      })
+      .catch(err => {
+        setError(err.message);
+        console.error('Error fetching watch history:', err);
+      })
+      .finally(() => setLoading(false));
   }, [user]);
 
   if (loading) return <p>Loading...</p>;
