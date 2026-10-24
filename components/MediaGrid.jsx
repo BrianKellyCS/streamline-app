@@ -75,7 +75,7 @@ const MediaGrid = ({ items, mediaType = 'none', onRemoveItem, onRemoveItems }) =
   return (
     <>
       {(onRemoveItem || onRemoveItems) && (
-        <div className="flex items-center justify-between px-4 pb-3">
+        <div className="flex items-center justify-start gap-2 px-2 pb-3 sm:px-3">
           <button
             type="button"
             onClick={() => setSelectionMode((current) => !current)}
