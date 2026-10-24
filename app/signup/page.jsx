@@ -77,9 +77,11 @@ const SignUp = () => {
       }
 
       setSuccess('User registered successfully!');
-      // Log the user in
-      login(addedUser);
-      // Redirect to homepage or dashboard
+      login({
+        id: addedUser.id,
+        username: addedUser.username,
+        email: addedUser.email,
+      });
       router.push('/');
     } catch (err) {
       console.error('Error signing up:', err);

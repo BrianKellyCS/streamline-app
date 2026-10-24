@@ -36,9 +36,11 @@ const Login = () => {
       }
 
       if (bcrypt.compareSync(password, user.password)) {
-        // Set the user in the AuthContext
-        login(user);
-        // Redirect to homepage or dashboard
+        login({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        });
         router.push('/');
       } else {
         setError('Invalid username or password.');
